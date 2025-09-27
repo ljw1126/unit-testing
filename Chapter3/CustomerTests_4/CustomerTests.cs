@@ -1,3 +1,5 @@
+using System;
+using System.ComponentModel.DataAnnotations.Schema;
 using unit_testing.Chapter2.Listing1;
 using Xunit;
 
@@ -6,7 +8,7 @@ namespace unit_testing.Chapter3.CustomerTests_4
 {
     public class CustomerTests
     {
-     
+
         [Fact]
         public void Purchase_succeeds_when_enough_inventory()
         {
@@ -25,7 +27,7 @@ namespace unit_testing.Chapter3.CustomerTests_4
             Store store = CreateStoreWithInventory(Product.Shampoo, 10);
             Customer sut = CreateCustomer();
 
-            bool actual = sut.Purchase(store, Product.Shampoo, 15);    
+            bool actual = sut.Purchase(store, Product.Shampoo, 15);
 
             Assert.False(actual);
             Assert.Equal(10, store.GetInventory(Product.Shampoo));
@@ -41,6 +43,39 @@ namespace unit_testing.Chapter3.CustomerTests_4
         private static Customer CreateCustomer()
         {
             return new Customer();
+        }
+    }
+
+    // 예제 3.9 기초 클래스 내 공통 초기화 코드
+    public class CustomerTests2
+    {
+        [Fact]
+        public void Purchase_succeeds_when_enough_inventory()
+        {
+            /* 여기서 DB 사용 */
+        }
+    }
+
+    public abstract class IntegrationTests : IDisposable
+    {
+        protected readonly Database _database;
+
+        protected IntegrationTests()
+        {
+            _database = new Database();
+        }
+
+        public void Dispose()
+        {
+            _database.Dispose();
+        }
+    }
+
+    public class Database
+    {
+        public void Dispose()
+        {
+            // do something
         }
     }
 }
